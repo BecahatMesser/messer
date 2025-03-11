@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messer Truck and Van - Radius Map</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuSWDNH6ek_A0YAmM-qdnCcL8vfS-UCtM"></script>
+    <script>
+        function initMap() {
+            // Messer Truck and Van in Westbrook, ME
+            var center = { lat: 43.6773, lng: -70.3554 }; // Coordinates for Westbrook, ME
+
+            var map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 7.5,
+                center: center
+            });
+
+            // Define radius distances and labels
+            var radiusData = [
+                { miles: 25, color: "#066cd1" },  // Blue1
+                { miles: 75, color: "#5786b5" }, // Blue2
+                { miles: 125, color: "#b3bec9" } // Blue3
+            ];
+
+            radiusData.forEach((data) => {
+                var radiusMeters = data.miles * 1609.34; // Convert miles to meters
+
+                // Draw circle
+                new google.maps.Circle({
+                    map: map,
+                    center: center,
+                    radius: radiusMeters,
+                    strokeColor: data.color,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: data.color,
+                    fillOpacity: 0.3
+                });
+
+                // Label position (on the east side of the circle)
+                var labelPosition = {
+                    lat: center.lat,
+                    lng: center.lng + (radiusMeters / 111320) // 1 degree ≈ 111.32 km
+                };
+
+                // Add label
+                new google.maps.Marker({
+                    position: labelPosition,
+                    map: map,
+                    label: {
+                        text: `${data.miles} miles`,
+                        color: "black",
+                        fontSize: "14px",
+                        fontWeight: "bold"
+                    },
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 0  // Hide default marker
+                    }
+                });
+            });
+        }
+    </script>
+</head>
+<body onload="initMap()">
+    <h2>Messer Truck and Van - Service Radius</h2>
+    <div id="map" style="height: 600px; width: 100%;"></div>
+</body>
+</html>
